@@ -1,0 +1,23 @@
+.env
+.venv
+
+Thumbs.db
+
+# Credentials & tokens
+credentials.json
+token.json
+.env
+.secrets
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+tempCodeRunnerFile.py
