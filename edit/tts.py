@@ -1,7 +1,6 @@
 import json
 import os
 import random
-import requests
 from dotenv import load_dotenv
 
 from elevenlabs import ElevenLabs, VoiceSettings
