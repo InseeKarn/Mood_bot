@@ -52,7 +52,7 @@ def upload_video(file_path, title, description,
 
     # load .env if not have use , ""
     category = category or os.getenv("YT_CATEGORY", "24")
-    privacy = privacy or os.getenv("YT_PRIVACY", "unlisted")
+    privacy = privacy or os.getenv("YT_PRIVACY", "public")
 
     #body (data of videos)
     body = {
