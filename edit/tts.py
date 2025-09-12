@@ -15,7 +15,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Eleven TTS Config
 client = ElevenLabs(api_key=os.getenv("ELEVEN_API"))
-VOICE_NAME = "Adam"
+
 
 
 def get_sentences():
@@ -42,7 +42,7 @@ def get_sentences():
 
     # TTS
     audio_generator = client.text_to_speech.convert(
-        voice_id="2EiwWnXFnvU5JabPnv8n",
+        voice_id="uhw0FsfiUiP7FZzm1Yue",
         text=sentence,
         model_id="eleven_multilingual_v2",
         voice_settings=VoiceSettings(

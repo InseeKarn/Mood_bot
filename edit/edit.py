@@ -54,13 +54,13 @@ def create_video():
         x = (size[0]-w)/2
         y = (size[1]-h)/2
 
-        # วาด stroke โดยการวาดข้อความซ้ำรอบๆ ตัวอักษร
+        # draw stroke
         for dx in range(-stroke_width, stroke_width+1):
             for dy in range(-stroke_width, stroke_width+1):
                 if dx != 0 or dy != 0:
                     draw.text((x+dx, y+dy), word, font=font, fill=stroke_fill)
 
-        # วาดข้อความจริงตรงกลาง
+        # draw text
         draw.text((x, y), word, font=font, fill="white")
 
         img_np = np.array(img)
