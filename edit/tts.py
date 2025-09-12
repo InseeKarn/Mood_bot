@@ -8,7 +8,7 @@ from elevenlabs import ElevenLabs, VoiceSettings
 
 load_dotenv()
 
-SAD_JSON = "sad.json"
+SAD_JSON = "sad.JSON"
 USED_JSON = "used_sad.json"
 OUTPUT_DIR = "src/tts"
 
