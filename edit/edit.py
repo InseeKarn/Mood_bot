@@ -1,32 +1,94 @@
-import requests
 import os
-from dotenv import load_dotenv
+import random
+import numpy as np
+from tts import get_sentences
+from PIL import Image, ImageDraw, ImageFont
+from moviepy.editor import (
+    VideoFileClip, concatenate_videoclips,
+    AudioFileClip, ImageClip, CompositeVideoClip, CompositeAudioClip
+)
 
-load_dotenv()
+BG_FOLDER = "src/bg"
+TTS_FOLDER = "src/tts"
+MUSIC_FOLDER = "src/music"
+FONT_PATH = "src/fonts/bold_font.ttf"
 
-API_KEY = os.getenv("PIXABAY_KEY")
+
+# ------------------- load clips -------------------
+video_files = [os.path.join(BG_FOLDER, f) for f in os.listdir(BG_FOLDER) if f.endswith(".mp4")]
+video_files = video_files[:5]
+random.shuffle(video_files)
+
+sentence = get_sentences()
+
+tts_file = os.path.join(TTS_FOLDER, "sentence.mp3")
+if not os.path.exists(tts_file):
+    raise FileNotFoundError("์NOT FOUND TTS: sentence.mp3")
+
+tts_audio = AudioFileClip(tts_file)
+tts_duration = tts_audio.duration
+
+# Load clips and resize properly
+clips = [VideoFileClip(vf).resize((720,1280)) for vf in video_files]
+
+# Adjust clips to match TTS duration
+total_clip_duration = sum(clip.duration for clip in clips)
+adjusted_clips = [clip.set_duration(clip.duration / total_clip_duration * tts_duration) for clip in clips]
+
+background_clip = concatenate_videoclips(adjusted_clips, method="compose")
 
 
-query = "night mood"
+# ------------------- text overlay -------------------
+words = sentence.split()
+per_word_duration = tts_duration / len(words)
 
-url = f"https://pixabay.com/api/videos/?key={API_KEY}&q={query}&per_page=10"
+def make_text_clip(word, duration, size=(720,1280), stroke_width=3, stroke_fill="black"):
+    img = Image.new("RGBA", size, (0,0,0,0))
+    draw = ImageDraw.Draw(img)
+    try:
+        font = ImageFont.truetype(FONT_PATH, 50)
+    except:
+        font = ImageFont.load_default()
 
-response = requests.get(url)
+    w, h = draw.textsize(word, font=font)
+    x = (size[0]-w)/2
+    y = (size[1]-h)/2
 
-if response.status_code == 200:
-    data = response.json()
-    hits = data.get("hits", [])
+    # วาด stroke โดยการวาดข้อความซ้ำรอบๆ ตัวอักษร
+    for dx in range(-stroke_width, stroke_width+1):
+        for dy in range(-stroke_width, stroke_width+1):
+            if dx != 0 or dy != 0:
+                draw.text((x+dx, y+dy), word, font=font, fill=stroke_fill)
 
-    if not hits:
-        print("Videos not found.")
-    else:
-        for i, video in enumerate(hits, start=1):
-            print(f"video {i}:")
-            print("  URL main:", video.get("pageURL"))
+    # วาดข้อความจริงตรงกลาง
+    draw.text((x, y), word, font=font, fill="white")
 
-            videos = video.get("videos", {})
-            for quality, info in videos.items():
-                print(f"  {quality}: {info.get('url')}")
-            print("-" * 50)
+    img_np = np.array(img)
+    return ImageClip(img_np).set_duration(duration)
+
+word_clips = []
+current_start = 0
+for w in words:
+    txt_clip = make_text_clip(w, per_word_duration)
+    txt_clip = txt_clip.set_start(current_start).crossfadein(0.1).crossfadeout(0.1) 
+    word_clips.append(txt_clip)
+    current_start += per_word_duration
+
+# ------------------- add random music -------------------
+from moviepy.audio.fx.all import audio_loop
+music_files = [os.path.join(MUSIC_FOLDER, f) for f in os.listdir(MUSIC_FOLDER) if f.endswith((".mp3", ".wav"))]
+if music_files:
+    music_file = random.choice(music_files)
+    music_clip = audio_loop(AudioFileClip(music_file), duration=tts_duration).volumex(0.3)
+    final_audio = CompositeAudioClip([tts_audio, music_clip])
 else:
-    print("Error:", response.status_code)
+    final_audio = tts_audio
+
+# ------------------- combine video and audio -------------------
+final_clip = CompositeVideoClip([background_clip, *word_clips])
+final_clip = final_clip.set_audio(final_audio.set_start(0))
+
+OUTPUT_FILE = "src/outputs/final.mp4"
+final_clip.write_videofile(OUTPUT_FILE, codec="libx264", fps=17, threads=4)
+
+print("✅ Done! Saved as", OUTPUT_FILE)

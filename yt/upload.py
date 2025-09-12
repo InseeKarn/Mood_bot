@@ -1,4 +1,5 @@
 import os
+import random
 from dotenv import load_dotenv
 
 from googleapiclient.discovery import build
@@ -12,7 +13,7 @@ from google.oauth2.credentials import Credentials
 
 SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
 load_dotenv()
-youtube_api = os.getenv("YT_API")
+youtube_api = os.getenv("GOOGLE_API")
 
 
 def get_service():
@@ -60,10 +61,16 @@ def upload_video(file_path, title, description,
         "snippet": {
             "title": title,
             "description": description,
-            "categoryId": category
+            "categoryId": category,
+            "tags": [
+                "shorts", "fyp", "viral", "sadmood", "quotes", "lifequotes",
+                "inspiration", "motivation", "deepquotes", "emotional",
+                "selfhelp", "mentalhealth", "selfcare", "mindfulness"
+            ]
         },
         "status": {
-            "privacyStatus": privacy
+            "privacyStatus": privacy,
+            "selfDeclaredMadeForKids": False,
         }
     }
 
@@ -85,22 +92,34 @@ def upload_video(file_path, title, description,
     return video_url
 
     # print(youtube_api)
-def run_upload():
-    raw_title = """riddles #quiz #iqtest #challenge #fyp #shorts #vira'"""
-
     
-    clean_title = " ".join(raw_title.split())
-    # x <= 100 ตัว
+def run_upload():
+    # raw_title = """Pick One… If You Dare 😱 | Would You Rather #fyp #shorts #vira'"""
+    title_ran = random.choice([
+        "99% Can’t Decide This! 😱",
+        "Only Brave People Can Choose… Dare You? 🤯",
+        "This Choice Will Break Your Brain! 🧠💥",
+        "WARNING: Once You Choose, You Can’t Undo! ⚠️",
+        "The HARDEST Would You Rather EVER! 😳",
+        ])
+
+    clean_title = " ".join(title_ran.split())
+    # x <= 100
     clean_title = clean_title[:100]
 
-    file_path = "src/outputs/quiz_shorts.mp4"
+    description_ran = random.choice([
+        "🧠 Test your choices with fun Would You Rather questions! #shorts #fyp",
+        "🤔 Can you make the tough choice? Try now! #shorts #fyp",
+        "🎯 Challenge your friends and see their decisions! #shorts #fyp",
+        "⚡ Interactive Would You Rather game for everyone! #shorts #fyp",
+        "⏱️ Think fast and make the right choice! #shorts #fyp"
+    ])
+
+    file_path = "src/outputs/final.mp4"
     video_url = upload_video(
         file_path= file_path,
         title=clean_title,
-        description="""#riddles #riddlegame #quiztime #funquiz #puzzletime
-        #brainteaser #mindgames #quizchallenge #trivia #logicpuzzle
-        #fyp #shorts #viral #challenge #fun
-        """
+        description=description_ran
     )
 
     # 🆕 Delete after uploaded
