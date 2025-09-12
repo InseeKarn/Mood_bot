@@ -2,8 +2,8 @@ name: Mood_bot Daily Run
 
 on:
   schedule:
-    # - cron: "0 13 * * *"  # 09:00 ET
-    # - cron: "0 0 * * *"  # 20:00 ET
+    - cron: "0 13 * * *"  # 09:00 ET
+    - cron: "0 0 * * *"  # 20:00 ET
   workflow_dispatch:  
 
 jobs:
@@ -11,10 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PEXELS_API: ${{ secrets.PEXELS_API }}
+      ELEVEN_API: ${{ secrets.ELEVEN_API }}
       YT_API: ${{ secrets.YT_API }}
-      YT_PRIVACY: ${{ secrets.YT_PRIVACY }}
-      YT_CATEGORY: ${{ secrets.YT_CATEGORY }}
-      DIS_AUTH: ${{ secrets.DIS_AUTH }}
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       HAS_CRED: ${{ secrets.YT_CREDENTIALS != '' }}
       HAS_TOKEN: ${{ secrets.TOKEN_JSON != '' }}
@@ -31,11 +29,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Install ImageMagick
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y imagemagick
-          sudo sed -i 's|rights="none"|rights="read|write"|g' /etc/ImageMagick-6/policy.xml
 
         # ✅ ไฟล์ว่าง
       - name: Create empty state files if missing

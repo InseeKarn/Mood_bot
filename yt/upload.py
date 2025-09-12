@@ -9,11 +9,9 @@ from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
 
-
-
 SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
 load_dotenv()
-youtube_api = os.getenv("GOOGLE_API")
+youtube_api = os.getenv("YT_API")
 
 
 def get_service():
@@ -96,11 +94,11 @@ def upload_video(file_path, title, description,
 def run_upload():
     # raw_title = """Pick One… If You Dare 😱 | Would You Rather #fyp #shorts #vira'"""
     title_ran = random.choice([
-        "99% Can’t Decide This! 😱",
-        "Only Brave People Can Choose… Dare You? 🤯",
-        "This Choice Will Break Your Brain! 🧠💥",
-        "WARNING: Once You Choose, You Can’t Undo! ⚠️",
-        "The HARDEST Would You Rather EVER! 😳",
+        "Even in Pain, You’re Stronger Than You Think 💔",
+        "When Life Feels Heavy, Remember Your Inner Strength 🌧️",
+        "Finding Light in the Darkest Moments 🖤",
+        "Embrace Your Journey, Resilience Comes From Struggle 🌱",
+        "Hope Exists Even When You Can’t Feel It 💭"
         ])
 
     clean_title = " ".join(title_ran.split())
@@ -108,11 +106,11 @@ def run_upload():
     clean_title = clean_title[:100]
 
     description_ran = random.choice([
-        "🧠 Test your choices with fun Would You Rather questions! #shorts #fyp",
-        "🤔 Can you make the tough choice? Try now! #shorts #fyp",
-        "🎯 Challenge your friends and see their decisions! #shorts #fyp",
-        "⚡ Interactive Would You Rather game for everyone! #shorts #fyp",
-        "⏱️ Think fast and make the right choice! #shorts #fyp"
+        "💔 Feeling low? These deep thoughts and quotes remind you that survival itself is proof of strength. #sad #mentalhealth #motivation #emotional #deepquotes",
+        "🌧️ Life feels heavy sometimes, but even small victories matter. Reflect, heal, and keep going. #sadmood #healing #motivation #mentalhealth",
+        "🖤 Emotional reflections for anyone struggling to find hope. Your journey is real, and your strength is undeniable. #emotional #deepthoughts #mentalhealth",
+        "🌱 Tough days teach resilience. Let these quotes inspire courage and self-kindness. #motivation #mentalhealth #deepquotes",
+        "💭 Feeling isolated or overwhelmed? These words remind you that hope and light are still possible. #sad #healing #emotional #mentalhealth"
     ])
 
     file_path = "src/outputs/final.mp4"

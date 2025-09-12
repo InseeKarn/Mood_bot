@@ -55,11 +55,15 @@ def get_sentences():
         ),
     )
 
-
+    # save audio
     filename = os.path.join(OUTPUT_DIR, "sentence.mp3")
+    timestamps = None
     with open(filename, "wb") as f:
         for chunk in audio_generator:
-            f.write(chunk)
+            if isinstance(chunk, dict) and "timestamps" in chunk:
+                timestamps = chunk["timestamps"]  # รับ timestamps ของคำ
+            elif isinstance(chunk, bytes):
+                f.write(chunk)
 
     print("Saved audio as:", filename)
 

@@ -21,3 +21,11 @@ __pycache__/
 .idea/
 
 tempCodeRunnerFile.py
+
+credentials.json
+token.json
+.secrets
+.venv
+__pycache__/
+tempCodeRunnerFile.py
+.vscode/
