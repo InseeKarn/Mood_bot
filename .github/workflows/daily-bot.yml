@@ -10,7 +10,7 @@ jobs:
   run-bot:
     runs-on: ubuntu-latest
     env:
-      PEXELS_API: ${{ secrets.PEXELS_API }}
+      PIXABAY_KEY: ${{ secrets.PIXABAY_KEY }}
       ELEVEN_API: ${{ secrets.ELEVEN_API }}
       YT_API: ${{ secrets.YT_API }}
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
