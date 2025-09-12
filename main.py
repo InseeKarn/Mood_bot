@@ -7,7 +7,7 @@ from notify.discord import discord_message
 import asyncio
 
 async def main():
-    await get_vids()          
+    get_vids()          
     create_video()            
     video_url = run_upload()
     if video_url:
