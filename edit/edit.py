@@ -89,7 +89,7 @@ def create_video():
     final_clip = final_clip.set_audio(final_audio.set_start(0))
 
     OUTPUT_FILE = "src/outputs/final.mp4"
-    final_clip.write_videofile(OUTPUT_FILE, codec="libx264", fps=17, threads=4)
+    final_clip.write_videofile(OUTPUT_FILE, codec="libx264", fps=25, threads=4)
 
     print("✅ Done! Saved as", OUTPUT_FILE)
 
