@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import requests
 from dotenv import load_dotenv
 
 from elevenlabs import ElevenLabs, VoiceSettings
@@ -16,6 +17,22 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 # Eleven TTS Config
 client = ElevenLabs(api_key=os.getenv("ELEVEN_API"))
 
+API_KEY = os.getenv("ELEVEN_API")
+headers = {
+    "xi-api-key": API_KEY
+}
+
+response = requests.get("https://api.elevenlabs.io/v1/user", headers=headers)
+data = response.json()
+
+print(json.dumps(data, indent=2))
+
+credits = data.get("subscription", {}).get("credits_remaining", 0)
+print("Real credits available:", credits)
+
+if credits < 160:
+    print("Not enough credits! Stop run")
+    exit()
 
 
 def get_sentences():
